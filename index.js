@@ -28,7 +28,7 @@ function checkIdExist(req, res, next) {
 function checkIdExistInCreate(req, res, next) {
     const { id } = req.body
     const project = projects.find(proj => proj.id === id)
-    
+
     if (project) {
         return res.status(400).json({ error: `Já existe um projeto com esse ID` })
     }
@@ -40,10 +40,17 @@ server.get('/projects', (req, res) => {
 })
 
 server.post('/projects', checkIdExistInCreate, (req, res) => {
-    const project = req.body
+    const { id, title } = req.body
+
+    const project = {
+        id,
+        title,
+        tasks: []
+    }
+
     projects.push(project)
 
-    return res.json(projects)
+    return res.json(project)
 })
 
 server.post('/projects/:id/tasks', checkIdExist, (req, res) => {
